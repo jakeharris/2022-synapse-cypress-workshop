@@ -32,7 +32,15 @@ describe('Books Page', () => {
     BookListComponent.getBook(book.id).contains(book.name);
   });
 
-  // it('should gracefully show an error message when loading the books fails', () => {});
+  it('should gracefully show an error message when loading the books fails', () => {
+    cy.intercept('GET', 'http://localhost:3000/books', {
+      statusCode: 500,
+    }).as('getBooksError');
+    cy.visit('/books');
+    cy.wait('@getBooksError');
+
+    BooksPage.getError();
+  });
 
   // it('should let you create a book', () => {});
 
