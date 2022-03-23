@@ -6,26 +6,6 @@ import * as BookListComponent from '../support/book-list-component.harness';
 import * as BookFormComponent from '../support/book-form-component.harness';
 import * as BooksPage from '../support/books-page.harness';
 
-describe('Books Page', () => {
-  it('should show a list all of the books', () => {
-    const book = setup();
-
-    BookListComponent.getBook(book.id).contains(book.name);
-  });
-
-  it('should gracefully show an error message when loading the books fails', () => {
-    setup({ throwErrorWhenLoadingBooks: true });
-
-    BooksPage.getError().should('contain', 'Error');
-  });
-
-  // it('should let you create a book', () => {});
-
-  // it('should let you edit a book', () => {});
-
-  // it('should let you delete a book', () => {});
-});
-
 function setup(options?: { throwErrorWhenLoadingBooks?: boolean }) {
   const book = {
     id: uuid.v4(),
@@ -53,3 +33,31 @@ function setup(options?: { throwErrorWhenLoadingBooks?: boolean }) {
 
   return book;
 }
+describe('Books Page', () => {
+  it('should show a list all of the books', () => {
+    const book = setup();
+
+    BookListComponent.getBook(book.id).contains(book.name);
+  });
+
+  it('should gracefully show an error message when loading the books fails', () => {
+    setup({ throwErrorWhenLoadingBooks: true });
+
+    BooksPage.getError().should('contain', 'Error');
+  });
+
+  it('should let you create a book', () => {
+    setup();
+
+    BookFormComponent.fillForm(
+      'Gotta Go Fast: A Memoir',
+      '420069',
+      "From collecting rings to putting a ring on it -- this compelling memoir details one of the world's pluckiest heroes and his fascinating ride through stardom."
+    );
+    BookFormComponent.saveForm();
+  });
+
+  // it('should let you edit a book', () => {});
+
+  // it('should let you delete a book', () => {});
+});
