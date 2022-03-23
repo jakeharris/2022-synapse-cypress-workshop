@@ -47,15 +47,15 @@ describe('Login Page', () => {
     });
   });
 
-  it('should log the user in when providing valid credentials, but debug before the click', () => {
-    const username = 'Admin';
-    const password = 'password';
-    cy.visit('/');
+  // it('should log the user in when providing valid credentials, but debug before the click', () => {
+  //   const username = 'Admin';
+  //   const password = 'password';
+  //   cy.visit('/');
 
-    cy.get('bco-login-form').within(() => {
-      cy.get('[data-test-id="usernameInput"]').type(username);
-      cy.get('[data-test-id="passwordInput"]').type(password);
-      cy.get('[data-test-id="loginButton"]').debug().click();
-    });
-  });
+  //   cy.get('bco-login-form').within(() => {
+  //     cy.get('[data-test-id="usernameInput"]').type(username);
+  //     cy.get('[data-test-id="passwordInput"]').type(password);
+  //     cy.get('[data-test-id="loginButton"]').debug().click();
+  //   });
+  // });
 });
