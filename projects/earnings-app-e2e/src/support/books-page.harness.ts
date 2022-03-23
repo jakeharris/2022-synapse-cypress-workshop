@@ -1,2 +1,2 @@
-export const getBooksPage = () => cy.get('bco-books-page');
-export const getError = () => getBooksPage().find('[data-test-id="error"]');
+export const getPage = () => cy.get('bco-books-page');
+export const getError = () => getPage().find('[data-test-id="error"]');
