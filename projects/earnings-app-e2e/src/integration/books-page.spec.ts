@@ -23,9 +23,9 @@ describe('Books Page', () => {
 
     AuthApi.login('Admin', 'password');
 
-    cy.intercept('GET', 'https://localhost:3000/books').as('getBooks');
-    cy.wait('@getBooks');
+    cy.intercept('GET', 'http://localhost:3000/books').as('getBooks');
     cy.visit('/');
+    cy.wait('@getBooks');
   });
 
   it('should show a list all of the books', () => {
