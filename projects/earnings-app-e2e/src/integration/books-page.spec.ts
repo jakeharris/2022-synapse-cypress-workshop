@@ -28,6 +28,9 @@ function setup(options?: { throwErrorWhenLoadingBooks?: boolean }) {
     cy.intercept('GET', 'http://localhost:3000/books').as('getBooks');
   }
 
+  cy.intercept('POST', 'http://localhost:3000/books').as('createBook');
+  cy.intercept('PATCH', 'http://localhost:3000/books/*').as('updateBook');
+
   cy.visit('/');
   cy.wait('@getBooks');
 
@@ -47,17 +50,44 @@ describe('Books Page', () => {
   });
 
   it('should let you create a book', () => {
-    setup();
+    const book = setup();
 
-    BookFormComponent.fillForm(
-      'Gotta Go Fast: A Memoir',
-      '420069',
-      "From collecting rings to putting a ring on it -- this compelling memoir details one of the world's pluckiest heroes and his fascinating ride through stardom."
-    );
+    BookFormComponent.fillForm({
+      name: 'Gotta Go Fast: A Memoir',
+      earnings: '420069',
+      description:
+        "From collecting rings to putting a ring on it -- this compelling memoir details one of the world's pluckiest heroes and his fascinating ride through stardom.",
+    });
     BookFormComponent.saveForm();
+    cy.wait('@createBook');
+
+    BooksApi.getBooks()
+      .its('body')
+      .should(
+        (books) =>
+          expect(books.some((createdBook) => createdBook.name === book.name)).to
+            .exist
+      );
   });
 
-  // it('should let you edit a book', () => {});
+  it('should let you edit a book', () => {
+    const book = setup();
+    const newBookDetails = {
+      name: 'Anything Else',
+      earnings: '471',
+      description:
+        "A desperate plea that we could stop seeing weird, Sonic-related test data in Jake's tests.",
+    };
+
+    BookListComponent.clickEditButtonOnBook(book.id);
+    BookFormComponent.fillForm(newBookDetails);
+    BookFormComponent.saveForm();
+    cy.wait('@updateBook');
+
+    BooksApi.getBook(book.id)
+      .its('body')
+      .should('deep.include', newBookDetails);
+  });
 
   // it('should let you delete a book', () => {});
 });

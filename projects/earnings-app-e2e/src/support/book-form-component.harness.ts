@@ -7,14 +7,18 @@ const getDescriptionInput = () =>
   getForm().find('[data-test-id="descriptionInput"]');
 const getSaveButton = () => getForm().find('[data-test-id="saveButton"]');
 
-export const fillForm = (
-  name: string,
-  earnings: string,
-  description: string
-) => {
-  getNameInput().type(name);
-  getEarningsInput().type(earnings);
-  getDescriptionInput().type(description);
+export const fillForm = ({
+  name,
+  earnings,
+  description,
+}: {
+  name: string;
+  earnings: string;
+  description: string;
+}) => {
+  getNameInput().clear().type(name);
+  getEarningsInput().clear().type(earnings);
+  getDescriptionInput().clear().type(description);
 };
 
 export const saveForm = () => {
