@@ -25,4 +25,13 @@ describe('Login Page', () => {
 
     cy.get('form').find('input').should('have.length', 2);
   });
+
+  it('should display the login form inputs (which we find via data-test-id)', () => {
+    cy.visit('/');
+
+    cy.get('form').within(() => {
+      cy.get('input[data-test-id="usernameInput"]').should('be.visible');
+      cy.get('input[data-test-id="passwordInput"]').should('be.visible');
+    });
+  });
 });
