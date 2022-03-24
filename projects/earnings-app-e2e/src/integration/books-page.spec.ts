@@ -30,12 +30,14 @@ function setup(options?: { throwErrorWhenLoadingBooks?: boolean }) {
 
   cy.intercept('POST', 'http://localhost:3000/books').as('createBook');
   cy.intercept('PATCH', 'http://localhost:3000/books/*').as('updateBook');
+  cy.intercept('DELETE', 'http://localhost:3000/books/*').as('deleteBook');
 
   cy.visit('/');
   cy.wait('@getBooks');
 
   return book;
 }
+
 describe('Books Page', () => {
   it('should show a list all of the books', () => {
     const book = setup();
@@ -89,5 +91,19 @@ describe('Books Page', () => {
       .should('deep.include', newBookDetails);
   });
 
-  // it('should let you delete a book', () => {});
+  it('should let you delete a book', () => {
+    const book = setup();
+
+    BookListComponent.clickDeleteButtonOnBook(book.id);
+    cy.wait('@deleteBook');
+
+    BooksApi.getBooks()
+      .its('body')
+      .should(
+        (books) =>
+          expect(
+            books.some((remainingBook) => remainingBook.name === book.name)
+          ).to.be.false
+      );
+  });
 });
